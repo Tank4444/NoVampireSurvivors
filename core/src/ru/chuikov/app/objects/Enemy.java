@@ -18,39 +18,46 @@ public class Enemy extends GameObject {
     @Override
     public void hit(GameObject object) {
         super.hit(object);
-        if (object instanceof Player){
+        if (object instanceof Player) {
             System.out.println("Hit detected by enemy");
             isAlive = false;
         }
     }
 
     public void moveToPlayer(int playerX, int playerY) {
-        double angle = Math.atan2(getY() - playerY, getX() - playerX);
-        if (angle < 0) angle = angle + 360;
-
-        double d = Math.sqrt(
-                (
-                        (playerX - getX()) * (playerX - getX())
-                ) + (
-                        (playerY - getY()) * (playerY - getY())
-                )
-        );
-
-        int dx = (int) (getX() + (playerX - getX()) / d * speed);
-        int dy = (int) (getY() + (playerY - getY()) / d * speed);
+        int dx = getCoordX(getX(),getY(),playerX,playerY, speed);
+        int dy = getCoordY(getX(),getY(),playerX,playerY, speed);
         setX(dx);
         setY(dy);
         //System.out.println("angle = " + angle + ", x = " + getX() + ", y = " + getY());
     }
 
-    private double getAngle(int playerX, int playerY) {
-        double cos = Math.round(
-                (this.getX() * playerX + this.getY() * playerY) /
-                        (Math.sqrt(this.getX() * this.getX() + this.getY() * this.getY())
-                                * Math.sqrt(playerX * playerX + playerY * playerY))
+    public static int getCoordX(int x0, int y0, int x1, int y1, int rad) {
+        double d = Math.sqrt(
+                (
+                        (x1 - x0) * (x1 - x0)
+                ) + (
+                        (y1 - y0) * (y1 - y0)
+                )
         );
-        cos = Math.acos(cos);
-        return (cos * 180) / Math.PI;
+        return (int) (x0 + (x1 - x0) / d * rad);
+    }
+
+    public static int getCoordY(int x0, int y0, int x1, int y1, int rad) {
+        double d = Math.sqrt(
+                (
+                        (x1 - x0) * (x1 - x0)
+                ) + (
+                        (y1 - y0) * (y1 - y0)
+                )
+        );
+        return (int) (y0 + (y1 - y0) / d * rad);
+    }
+
+    public static double getAngle(int x0, int y0, int x1, int y1) {
+        double angle = Math.atan2(y1 - y0, x1 - x0);
+        if (angle < 0) angle = angle + 360;
+        return angle;
 
     }
 
