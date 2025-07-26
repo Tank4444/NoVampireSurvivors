@@ -1,5 +1,6 @@
 package ru.chuikov.app.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.World;
 
 import ru.chuikov.app.GameResources;
@@ -12,6 +13,9 @@ public class Player extends GameObject {
     public int max_health = 100;
 
     int speed = 10;
+    private final String TAG= "PLAYER";
+    public int countdown;
+    public int real_countdown;
 
     public Player(int x, int y, World world) {
         super(GameResources.PLAYER_IMG_PATH,
@@ -19,17 +23,30 @@ public class Player extends GameObject {
                 y,
                 GameSettings.PLAYER_WIDTH,
                 GameSettings.PLAYER_HEIGHT,
-                (short) 4,
+                GameSettings.CATEGORY_PLAYER,
+                GameSettings.MASK_PLAYER,
                 world);
+        countdown = 50;
+        real_countdown = countdown;
 
     }
 
     @Override
     public void hit(GameObject object) {
         super.hit(object);
-        if (object instanceof Enemy){
-            System.out.println("Hit detected");
-            health-=10;
+        if (object instanceof Enemy) {
+            Gdx.app.log(TAG, "Detect hit with Enemy");
+            health -= 10;
+        }
+    }
+
+    public boolean readyToFire(){
+        if (real_countdown==0){
+            real_countdown = countdown;
+            return true;
+        }else {
+            real_countdown--;
+            return false;
         }
     }
 
@@ -45,6 +62,7 @@ public class Player extends GameObject {
 
         this.setX(x);
         this.setY(y);
+
     }
 
 }

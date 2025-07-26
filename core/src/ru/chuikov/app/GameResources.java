@@ -15,7 +15,7 @@ public class GameResources {
     public static final String PAUSE_IMG_PATH = "textures/pause_icon.png";
     public static final String LIVE_IMG_PATH = "textures/life.png";
 
-    public static final String BULLET_IMG_PATH = "textures/bullet.png";
+    public static final String BULLET_IMG_PATH = "textures/bulletFly.png";
     public static final String SHIP_IMG_PATH = "textures/ship.png";
     public static final String PLAYER_IMG_PATH = "textures/player.png";
     public static final String ZOMBIE_IMG_PATH = "textures/zombie.png";
@@ -26,6 +26,7 @@ public class GameResources {
     public static final String BACKGROUND_MUSIC_PATH = "sounds/background_music.mp3";
     public static final String DESTROY_SOUND_PATH = "sounds/destroy.mp3";
     public static final String SHOOT_SOUND_PATH = "sounds/shoot.mp3";
+    public static final String MAIN_SOUND_PATH = "sounds/main_music.mp3";
 
     // Fonts for text
 

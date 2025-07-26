@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import ru.chuikov.app.GameResources;
 import ru.chuikov.app.GameSession;
@@ -30,7 +31,9 @@ import ru.chuikov.app.components.TextView;
 import ru.chuikov.app.managers.ContactManager;
 import ru.chuikov.app.objects.Enemy;
 import ru.chuikov.app.objects.Player;
+import ru.chuikov.app.objects.Projectile;
 import ru.chuikov.app.utils.Joystick;
+import ru.chuikov.app.utils.Utils;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -52,17 +55,17 @@ public class GameScreen extends ScreenAdapter {
     // ENDED state UI
 
 
-
-
-
     //Game logic
     ArrayList<Enemy> enemies;
-
+    ArrayList<Projectile> projectiles;
+    Random random;
 
     public GameScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
         gameSession = new GameSession();
+        random = new Random();
         enemies = new ArrayList<Enemy>();
+        projectiles = new ArrayList<Projectile>();
         contactManager = new ContactManager(myGdxGame.world);
         backgroundView = new BackgroundView(GameResources.BACKGROUND_IMG_PATH);
         player = new Player(
@@ -72,7 +75,10 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer = new ShapeRenderer();
         joystick = new Joystick(GameSettings.SCREEN_WIDTH / 2, 300, 200);
 
-        enemies.add(new Enemy(1, 1, myGdxGame.world));
+        for (int i = 0; i < 3; i++) {
+            int angle = Utils.getRandomAngle();
+            enemies.add(Enemy.enemyRandom(myGdxGame.world));
+        }
 
         healthBar = new HealthBar(0, GameSettings.SCREEN_HEIGHT - 50,
                 GameSettings.SCREEN_WIDTH,
@@ -80,7 +86,7 @@ public class GameScreen extends ScreenAdapter {
         );
 
         pauseButton = new ButtonView(
-                0, 0,
+                0, GameSettings.SCREEN_HEIGHT - 104,
                 46, 54,
                 GameResources.PAUSE_IMG_PATH
         );
@@ -91,29 +97,56 @@ public class GameScreen extends ScreenAdapter {
     public void show() {
         restartGame();
     }
+
     private void restartGame() {
 
 
         gameSession.startGame();
     }
+
     @Override
     public void render(float delta) {
         //Update all data
+
         //User position
         player.move(
                 joystick.getHorizontalInputInt(),
                 joystick.getVerticalInputInt()
         );
 
-
-        for (Enemy e : enemies) {
-            if (!e.isAlive) {
-                myGdxGame.world.destroyBody(e.body);
-                enemies.remove(e);
-            }
-            e.moveToPlayer(player.getX(), player.getY());
+        //Update enemy info
+        for (int i = 0; i < enemies.size(); i++) {
+            if (!enemies.get(i).isAlive) {
+                myGdxGame.world.destroyBody(enemies.get(i).body);
+                enemies.remove(enemies.get(i));
+            } else
+                enemies.get(i).moveToPlayer(player.getX(), player.getY());
+        }
+        //Update projectile info
+        for (int i = 0; i < projectiles.size(); i++) {
+            if (!projectiles.get(i).isAlive) {
+                myGdxGame.world.destroyBody(projectiles.get(i).body);
+                projectiles.remove(projectiles.get(i));
+            } else
+                projectiles.get(i).update();
         }
 
+        //check shoot
+        if (player.readyToFire()) {
+            Enemy nearestEnemy = Utils.findNearestEnemy(player, enemies);
+            if (nearestEnemy != null) {
+
+                projectiles.add(new Projectile(
+                        player.getX(),
+                        player.getY(),
+                        10, nearestEnemy,
+                        myGdxGame.world
+                ));
+            }
+            ;
+        }
+
+        //launch
         healthBar.setHealth(player.health, player.max_health);
 
         // Update joystick
@@ -123,9 +156,23 @@ public class GameScreen extends ScreenAdapter {
 
 
         handleInput();
+
+        switch (gameSession.state) {
+            case PLAYING:
+                if (gameSession.shouldSpawnTrash()) {
+                    enemies.add(Enemy.enemyRandom(myGdxGame.world));
+                }
+                break;
+            case PAUSED:
+                break;
+            case POWER_UP:
+                break;
+            case ENDED:
+                break;
+        }
+
+
         myGdxGame.stepWorld();
-
-
         draw();
     }
 
@@ -160,8 +207,11 @@ public class GameScreen extends ScreenAdapter {
         ScreenUtils.clear(Color.CLEAR);
         myGdxGame.batch.begin();
         backgroundView.draw(myGdxGame.batch);
+        pauseButton.draw(myGdxGame.batch);
         player.draw(myGdxGame.batch);
         for (Enemy e : enemies) e.draw(myGdxGame.batch);
+        for (Projectile p : projectiles) p.draw(myGdxGame.batch);
+
         myGdxGame.batch.end();
 
         Gdx.gl.glEnable(GL20.GL_BLEND);

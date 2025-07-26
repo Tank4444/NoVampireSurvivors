@@ -17,7 +17,7 @@ public class AudioManager {
     public Sound explosionSound;
 
     public AudioManager() {
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal(GameResources.BACKGROUND_MUSIC_PATH));
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal(GameResources.MAIN_SOUND_PATH));
         shootSound = Gdx.audio.newSound(Gdx.files.internal(GameResources.SHOOT_SOUND_PATH));
         explosionSound = Gdx.audio.newSound(Gdx.files.internal(GameResources.DESTROY_SOUND_PATH));
 

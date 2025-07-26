@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class GameObject {
 
     public short cBits;
+    public short mBits;
 
     public int width;
     public int height;
@@ -22,10 +23,14 @@ public class GameObject {
     public Body body;
     Texture texture;
 
-    GameObject(String texturePath, int x, int y, int width, int height, short cBits, World world) {
+    GameObject(String texturePath, int x, int y, int width, int height,
+               short cBits,
+               short mBits,
+               World world) {
         this.width = width;
         this.height = height;
         this.cBits = cBits;
+        this.mBits = mBits;
 
         texture = new Texture(texturePath);
         body = createBody(x, y, world);
@@ -76,7 +81,8 @@ public class GameObject {
         fixtureDef.density = 0.1f;
         fixtureDef.friction = 1f;
         fixtureDef.filter.categoryBits = cBits;
-
+        fixtureDef.filter.maskBits = mBits;
+        fixtureDef.isSensor = true;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         circleShape.dispose();
