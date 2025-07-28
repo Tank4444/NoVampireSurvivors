@@ -11,12 +11,10 @@
 
 APK-файл: https://github.com/Tank4444/NoVampireSurvivors/releases
 
+Media: https://github.com/Tank4444/NoVampireSurvivors/blob/master/media/
+
 Презентация: https://github.com/Tank4444/NoVampireSurvivors/blob/master/media/Presentation.pdf
 
-Видео: https://github.com/Tank4444/NoVampireSurvivors/blob/master/media/NoVampireSurvivors.mp4
-
-[![Watch the video](https://raw.githubusercontent.com/Tank4444/NoVampireSurvivors/blob/master/media/Preview.png)](https://raw.githubusercontent.com/Tank4444/NoVampireSurvivors/blob/master/media/NoVampireSurvivors.mp4)
-
-
+Видео: https://disk.yandex.ru/i/i5FPqkyijRIRMQ
 
 С уважением, Чуйков А.Ю. Telegram: @AYChuikov
