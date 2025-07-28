@@ -65,7 +65,7 @@ public class GameSession {
         return score;
     }
 
-    public boolean shouldSpawnTrash() {
+    public boolean shouldSpawnEnemy() {
         if (nextTrashSpawnTime <= TimeUtils.millis()) {
             nextTrashSpawnTime = TimeUtils.millis() + (long) (GameSettings.STARTING_TRASH_APPEARANCE_COOL_DOWN
                     * getTrashPeriodCoolDown());

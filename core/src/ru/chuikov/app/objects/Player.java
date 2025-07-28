@@ -1,24 +1,37 @@
 package ru.chuikov.app.objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.util.ArrayList;
+
 import ru.chuikov.app.GameResources;
-import ru.chuikov.app.GameSession;
 import ru.chuikov.app.GameSettings;
 
 public class Player extends GameObject {
+    public int max_health = GameSettings.PLAYER_DEFAULT_MAX_HEALTH;
+    public int health = max_health;
 
-    public int health = 100;
-    public int max_health = 100;
 
-    int speed = 10;
-    private final String TAG= "PLAYER";
-    public int countdown;
-    public int real_countdown;
+    int speed = GameSettings.PLAYER_DEFAULT_SPEED;
+    private final String TAG = "PLAYER";
+    public int countdown = GameSettings.PLAYER_DEFAULT_COUNTDOWN;
+    public int realCountdown;
 
+    public boolean isAlive;
+
+    public ArrayList<Texture> textures;
+
+    public int textureNumber;
+
+    public final int countNextTexture = GameSettings.PLAYER_DEFAULT_TEXTURE_CHANGE;
+
+    public int realTimerTextureChange;
+
+    public boolean isMoving;
     public Player(int x, int y, World world) {
-        super(GameResources.PLAYER_IMG_PATH,
+        super(GameResources.PLAYER_IMG_PATH_0,
                 x,
                 y,
                 GameSettings.PLAYER_WIDTH,
@@ -26,10 +39,19 @@ public class Player extends GameObject {
                 GameSettings.CATEGORY_PLAYER,
                 GameSettings.MASK_PLAYER,
                 world);
-        countdown = 50;
-        real_countdown = countdown;
+        textures = new ArrayList<Texture>();
+        textures.add(this.texture);
+        textures.add(new Texture(GameResources.PLAYER_IMG_PATH_1));
+        textures.add(new Texture(GameResources.PLAYER_IMG_PATH_2));
+        textures.add(new Texture(GameResources.PLAYER_IMG_PATH_3));
+        this.isAlive = true;
+        textureNumber = 0;
+        realCountdown = countdown;
+        realTimerTextureChange = countNextTexture;
+        isMoving = false;
 
     }
+
 
     @Override
     public void hit(GameObject object) {
@@ -37,20 +59,22 @@ public class Player extends GameObject {
         if (object instanceof Enemy) {
             Gdx.app.log(TAG, "Detect hit with Enemy");
             health -= 10;
+            if (health <= 0) isAlive = false;
         }
     }
 
-    public boolean readyToFire(){
-        if (real_countdown==0){
-            real_countdown = countdown;
+    public boolean readyToFire() {
+        if (realCountdown <= 0) {
+            realCountdown = countdown;
             return true;
-        }else {
-            real_countdown--;
+        } else {
+            realCountdown--;
             return false;
         }
     }
 
     public void move(int xInput, int yInput) {
+
         int x = this.getX() + (xInput * speed);
         int y = this.getY() + (yInput * speed);
 
@@ -62,6 +86,20 @@ public class Player extends GameObject {
 
         this.setX(x);
         this.setY(y);
+
+        if (isMoving){
+            realTimerTextureChange--;
+
+            if (realTimerTextureChange<=0){
+                textureNumber++;
+                if (textureNumber >=textures.size()) textureNumber = 0;
+                this.setTexture(textures.get(textureNumber));
+                realTimerTextureChange = countNextTexture;
+            }
+        }
+
+
+
 
     }
 

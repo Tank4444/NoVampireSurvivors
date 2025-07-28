@@ -19,6 +19,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import ru.chuikov.app.managers.AudioManager;
 import ru.chuikov.app.screens.GameScreen;
 import ru.chuikov.app.screens.MenuScreen;
+import ru.chuikov.app.screens.ScoreScreen;
+import ru.chuikov.app.screens.SettingsScreen;
 
 public class MyGdxGame extends Game {
 
@@ -34,9 +36,12 @@ public class MyGdxGame extends Game {
 	public AudioManager audioManager;
 
 	//public GameScreen gameScreen;
-	public MenuScreen menuScreen;
-	public SettingsScreen settingsScreen;
+	public Screen menuScreen;
+	public Screen settingsScreen;
     public Screen gameScreen;
+
+	public Screen scoreScreen;
+
 
     float accumulator = 0;
 
@@ -57,7 +62,8 @@ public class MyGdxGame extends Game {
 
 		gameScreen = new GameScreen(this);
 		menuScreen = new MenuScreen(this);
-		//settingsScreen = new SettingsScreen(this);
+		settingsScreen = new SettingsScreen(this);
+		scoreScreen = new ScoreScreen(this);
 
 		setScreen(menuScreen);
 	}

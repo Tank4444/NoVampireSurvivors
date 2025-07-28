@@ -30,6 +30,9 @@ public class TextView extends View{
         height = glyphLayout.height;
     }
 
+    public String getText() {
+        return text;
+    }
     @Override
     public void draw(SpriteBatch batch) {
         font.draw(batch, text, x, y + height);

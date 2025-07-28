@@ -23,6 +23,7 @@ public class GameObject {
     public Body body;
     Texture texture;
 
+
     GameObject(String texturePath, int x, int y, int width, int height,
                short cBits,
                short mBits,
@@ -36,6 +37,10 @@ public class GameObject {
         body = createBody(x, y, world);
     }
 
+
+    public void setTexture(Texture texture){
+        this.texture = texture;
+    }
     public void draw(SpriteBatch batch) {
         batch.draw(texture,
                 getX() - (width / 2f),
@@ -81,7 +86,7 @@ public class GameObject {
         fixtureDef.density = 0.1f;
         fixtureDef.friction = 1f;
         fixtureDef.filter.categoryBits = cBits;
-        fixtureDef.filter.maskBits = mBits;
+        //fixtureDef.filter.maskBits = mBits;
         fixtureDef.isSensor = true;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
