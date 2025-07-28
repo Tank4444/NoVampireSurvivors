@@ -27,6 +27,7 @@
 -keep public class com.badlogic.gdx.scenes.scene2d.** { *; }
 -keep public class com.badlogic.gdx.graphics.g2d.BitmapFont { *; }
 -keep public class com.badlogic.gdx.graphics.Color { *; }
+-keep class com.badlogic.gdx.physics.box2d.** { *; }
 
 # Required if using Gdx-Controllers extension
 -keep class com.badlogic.gdx.controllers.android.AndroidControllers
